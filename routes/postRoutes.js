@@ -1,12 +1,24 @@
 const express = require("express");
 const postRoutes = express.Router();
-const { getPostForm, createPost } = require("../controllers/postController");
+const { getPostForm, createPost, getPosts, getPostById } = require("../controllers/postController");
 const upload = require("../middlewares/upload");
+const { ensureAuthenticated } = require("../middlewares/auth");
 
 // get post form
 postRoutes.get("/add", getPostForm);
 
 // post logic
-postRoutes.post("/add", upload.single("image"), createPost);
+postRoutes.post(
+  "/add",
+  ensureAuthenticated,
+  upload.array("images", 5),
+  createPost
+);
+
+// get all posts
+postRoutes.get("/", getPosts);
+
+// get post by id
+postRoutes.get("/:id", getPostById);
 
 module.exports = postRoutes;

@@ -13,7 +13,7 @@ userRoutes.post("/login", login);
 userRoutes.get("/register", getRegister);
 
 // main logic for user registration
-userRoutes.post("/register", register);
+userRoutes.post("/register", register); 
 
 // logout route
 userRoutes.get("/logout", logout);

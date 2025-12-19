@@ -9,6 +9,8 @@ const MongoStore = require("connect-mongo").default;
 const { log } = require("node:console");
 const userRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
+const errorHandler = require("./middlewares/errorHandler");
+const commentRoutes = require("./routes/commentRoutes");
 
 require("dotenv").config();
 
@@ -48,6 +50,10 @@ app.get("/", (req, res) => {
 // routes
 app.use("/auth", userRoutes);
 app.use("/posts", postRoutes);
+app.use("/", commentRoutes);
+
+// error handling middleware
+app.use(errorHandler);
 
 // start server
 mongoose
