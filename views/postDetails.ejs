@@ -1,31 +1,156 @@
-<%-include('partials/header', {title:"Home", user: user})%>
-<h1><%= post?.title %></h1>
-<p><%= post?.content %></p>
-<% post?.images?.forEach((image)=>{ %>
-<div>
-  <img src="<%= image.url %>" alt="Post Image" />
-</div>
+<%-include('partials/header', {title: "Post Details", user: user})%>
 
-<% }) %>
-<!-- action buttons -->
-<% if(user?._id.toString() == post?.author?._id?.toString()) { %>
-<div>
-  <a href="/posts/<%= post._id %>/edit">Edit</a>
-  <a href="/posts/<%= post._id %>/delete">Delete</a>
-</div>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8">
+      <!-- Post Content Card -->
+      <div class="card shadow-lg border-0 mb-4">
+        <div class="card-body p-4">
+          <h1 class="card-title text-dark mb-3"><%= post?.title %></h1>
 
-<!--comment form-->
-<div>
-  <h3>Comments</h3>
-  <form action="/posts/<%= post?._id %>/comments" method="post">
-    <textarea
-      name="content"
-      rows="5"
-      placeholder="Add comment"
-      required
-    ></textarea>
-    <input type="submit" value="comment" />
-  </form>
-</div>
+          <!-- Author and Date Info -->
+          <div class="mb-4">
+            <small class="text-muted">
+              <i class="fas fa-user me-1"></i>
+              By <%= post?.author?.username %> on <%= new
+              Date(post?.createdAt).toLocaleDateString() %>
+            </small>
+          </div>
 
-<% } %> <%-include('partials/footer')%>
+          <p class="card-text text-muted mb-4"><%= post?.content %></p>
+
+          <% if (post?.images?.length > 0) { %>
+          <div class="row g-3 mb-4">
+            <% post.images.forEach((image) => { %>
+            <div class="col-md-6 col-lg-4">
+              <img
+                src="<%= image.url %>"
+                alt="Post Image"
+                class="img-fluid rounded shadow-sm"
+              />
+            </div>
+            <% }); %>
+          </div>
+          <% } %>
+
+          <!-- Action Buttons -->
+          <% if(user?._id.toString() == post?.author?._id?.toString()) { %>
+          <div class="d-flex gap-2 mb-4">
+            <a
+              href="/posts/<%= post._id %>/edit"
+              class="btn btn-outline-primary"
+            >
+              <i class="fas fa-edit me-1"></i>Edit
+            </a>
+            <form
+              action="/posts/<%= post._id %>?_method=DELETE"
+              method="POST"
+              class="d-inline"
+            >
+              <button type="submit" class="btn btn-outline-danger">
+                <i class="fas fa-trash me-1"></i>Delete
+              </button>
+            </form>
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Comments Section -->
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-white border-bottom-0">
+          <h3 class="card-title mb-0 text-dark">
+            <i class="fas fa-comments me-2 text-primary"></i>Comments
+          </h3>
+        </div>
+        <div class="card-body p-4">
+          <div class="mb-4">
+            <% post.comments.forEach((comment) => { %>
+            <div class="border-bottom pb-3 mb-3">
+              <div class="d-flex align-items-start">
+                <div class="flex-grow-1">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-2"
+                  >
+                    <strong class="text-dark"
+                      ><%= comment.author.username %></strong
+                    >
+                    <small class="text-muted">
+                      <% const now = new Date(); const commentDate = new
+                      Date(comment.createdAt); const diffTime = Math.abs(now -
+                      commentDate); const diffDays = Math.ceil(diffTime / (1000
+                      * 60 * 60 * 24)); let timeAgo; if (diffDays === 1) {
+                      timeAgo = '1 day ago'; } else if (diffDays < 7) { timeAgo
+                      = diffDays + ' days ago'; } else if (diffDays < 30) {
+                      const weeks = Math.floor(diffDays / 7); timeAgo = weeks
+                      === 1 ? '1 week ago' : weeks + ' weeks ago'; } else {
+                      const months = Math.floor(diffDays / 30); timeAgo = months
+                      === 1 ? '1 month ago' : months + ' months ago'; } %> <%=
+                      timeAgo %>
+                    </small>
+                  </div>
+                  <p class="mb-1 text-muted"><%= comment.content %></p>
+                  <% if(user?._id.toString() ==
+                  comment?.author?._id?.toString()) { %>
+                  <div class="btn-group">
+                    <a
+                      href="/comments/<%= comment._id %>/edit"
+                      class="btn btn-outline-primary btn-sm"
+                    >
+                      <i class="fas fa-edit me-1"></i>Edit
+                    </a>
+                    <form
+                      action="/comments/<%= comment._id %>?_method=DELETE"
+                      method="POST"
+                      class="d-inline"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-outline-danger btn-sm"
+                      >
+                        <i class="fas fa-trash me-1"></i>Delete
+                      </button>
+                    </form>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+              <% }); %>
+            </div>
+            <p class="text-muted mb-4">No comments yet.</p>
+
+            <!-- Comment Form -->
+            <% if (user) { %>
+            <form action="/posts/<%= post?._id %>/comments" method="post">
+              <div class="mb-3">
+                <label for="content" class="form-label fw-bold text-dark"
+                  >Add a Comment</label
+                >
+                <textarea
+                  name="content"
+                  id="content"
+                  rows="4"
+                  class="form-control"
+                  placeholder="Share your thoughts..."
+                  required
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane me-1"></i>Post Comment
+              </button>
+            </form>
+            <% } else { %>
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i>Please
+              <a href="/auth/login" class="alert-link">log in</a> to add a
+              comment.
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%-include('partials/footer')%>
+</div>

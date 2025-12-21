@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { profile } = require("node:console");
+const { url } = require("node:inspector");
 
 // schema
 const userSchema = new mongoose.Schema(
@@ -19,8 +20,9 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     profilePicture: {
-      type: String,
+      type: Object,
       public_id: String,
+      url : String,
     },
     bio: {
       type: String,

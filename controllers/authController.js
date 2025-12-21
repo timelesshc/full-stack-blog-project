@@ -30,7 +30,7 @@ exports.login = asyncHandler(async (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.redirect("/");
+      return res.redirect("/users/profile");
     });
   })(req, res, next);
 });

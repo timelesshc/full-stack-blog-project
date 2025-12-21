@@ -1,0 +1,76 @@
+<%-include('partials/header', {title: 'Edit Comment', user: user})%>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow-lg border-0 bg-light">
+        <div class="card-header bg-white border-bottom-0">
+          <h2 class="card-title mb-0 text-dark">
+            <i class="fas fa-edit me-2 text-primary"></i>Edit Comment
+          </h2>
+        </div>
+        <div class="card-body p-4">
+          <% if (typeof success !== 'undefined' && success){ %>
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            <i class="fas fa-check-circle me-2"></i><%= success %>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          <% } %> <% if (typeof error !== 'undefined' && error){ %>
+          <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+          >
+            <i class="fas fa-exclamation-triangle me-2"></i><%= error %>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          <% } %>
+
+          <form
+            action="/comments/<%= comment._id %>?_method=PUT"
+            method="POST"
+            id="commentForm"
+          >
+            <div class="mb-4">
+              <label for="content" class="form-label fw-bold text-dark">
+                <i class="fas fa-comment me-2 text-primary"></i>Comment Content
+              </label>
+              <textarea
+                id="content"
+                name="content"
+                class="form-control border-dark"
+                rows="6"
+                placeholder="Edit your comment..."
+                required
+              ><%= comment.content %></textarea>
+              <div class="form-text text-muted">
+                Update your comment content
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-save me-1"></i>Update Comment
+              </button>
+              <a href="/posts/<%= comment.post %>" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-times me-1"></i>Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%-include('partials/footer')%>

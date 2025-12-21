@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -7,12 +8,12 @@ const session = require("express-session");
 const User = require("./models/User");
 const MongoStore = require("connect-mongo").default;
 const { log } = require("node:console");
-const userRoutes = require("./routes/authRoutes");
+const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 const commentRoutes = require("./routes/commentRoutes");
-
-require("dotenv").config();
+const methodOverride = require("method-override");
+const userRoutes = require("./routes/userRoutes");
 
 // port
 const PORT = process.env.PORT || 3000;
@@ -29,6 +30,9 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
   })
 );
+
+// method override middleware
+app.use(methodOverride("_method"));
 
 // initialize passport
 passportConfig(passport);
@@ -48,9 +52,10 @@ app.get("/", (req, res) => {
 });
 
 // routes
-app.use("/auth", userRoutes);
+app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
 app.use("/", commentRoutes);
+app.use("/users", userRoutes);
 
 // error handling middleware
 app.use(errorHandler);
