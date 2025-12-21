@@ -3,6 +3,8 @@
 
 A modern full-stack blog application where users can register, create posts, comment, and manage their profiles, including uploading profile pictures. The project demonstrates a robust CRUD architecture, authentication, and file upload handling.
 
+![alt text](<images/Screenshot 2025-12-21 011236.jpg>)
+
 ## Tech Stack
 
 ### Backend
