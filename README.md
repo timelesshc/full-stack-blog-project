@@ -73,6 +73,3 @@ app.js            # Main Express app entry point
 	```
 5. **Visit the app:**
 	Open your browser and go to `http://localhost:3000`
-
-## License
-This project is licensed under the MIT License.
